@@ -10,6 +10,7 @@ from termcolor import colored
 from HelpTable import HelpTable
 from OptionsTable import OptionsTable
 from Farwells import farewells
+from sub_commands import SubCommands
 import subprocess
 import os
 
@@ -18,18 +19,31 @@ class Talon:
     success = colored('[+] ', 'green')
     fail = colored('[-] ', 'red')
     server_commands = ServerCommands()
-    
+    sub_commands = SubCommands()
     def __init__(self) -> None:
         pass
+
+
+    def sub_command_handler(self, command: str) -> None:
+        if command in self.sub_commands.subcmds[self.current_command]:
+            self.sub_commands.subcmds[self.current_command][command]["Location"]()
+        else:
+            self.input_handler(command)
     
     def input_handler(self, user_input: str) -> None:
         parts = user_input.split(maxsplit=1)
         command = parts[0]
+
+
         if len(parts) > 1:
             args = parts[1]
         else:
             args = ""
-
+        try :
+            self.sub_command_handler(command)
+            return
+        except:
+            pass
         if command == "exit":
             print(self.success +  random.choice(farewells))
             exit()
@@ -61,6 +75,7 @@ class Talon:
                 self.set_option(option, value)
             else:
                 print(self.fail + "No command selected")
+        
             
         else:
             process = subprocess.run(user_input, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -76,10 +91,17 @@ class Talon:
             return
         table = self.server_commands.SList[self.current_command]["Table"]
         table.display()
+        try:
+            if self.sub_commands.subcmds[self.current_command]:
+                print(self.success + "Sub Commands:")
+                for subcommand in self.sub_commands.subcmds[self.current_command]:
+                    print(" - " + subcommand)
+        except:
+            return
     def set_option(self, option: str, value: str) -> None:
         if self.current_command:
             if option in self.server_commands.SList[self.current_command]["Options"]:
-                self.server_commands.SList[self.current_command]["Options"][option]["Value"] = value
+                ServerCommands.server_commands.SList[self.current_command]["Options"][option]["Value"] = value
                 print(self.success + "Set " + option + " to " + value)
             else:
                 print(self.fail + "Option not found")

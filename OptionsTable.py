@@ -30,6 +30,7 @@ class OptionsTable:
             if current_setting is not None:
                 self.data[row_index][1] = current_setting
             self._rebuild_table()
+  
 
     def display(self):
         """Display the table."""

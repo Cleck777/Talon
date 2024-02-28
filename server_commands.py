@@ -2,12 +2,18 @@ import os
 from OptionsTable import OptionsTable
 from HelpTable import HelpTable
 
+
 class ServerCommands:
+    
+    
     AdvancedTable = HelpTable("Advanced Commands", ["Command", "Description"])
     HelperTable = HelpTable("Generic Commands", ["Command", "Description"])
     SettingsTable = OptionsTable("Settings", ["Setting", "Value", "Required", "Description"])
     CrackTable = OptionsTable("Password Cracking", ["Setting", "Value", "Required", "Description"])
     MTLSTable = OptionsTable("MTLS", ["Setting", "Value", "Required", "Description"])
+
+
+    
     ServList = {
         "show": {
             "Description": "Show information",
@@ -98,7 +104,9 @@ class ServerCommands:
                     "Description": "Port for the server"
                 }
             },
-            "Table": MTLSTable
+            "Table": MTLSTable,
+            
+            
         }
     }
     def update_mtls_ip_port(self, ip, port):
@@ -125,3 +133,4 @@ class ServerCommands:
                 for option in self.SList[command]["Options"]:
                     option_data = self.SList[command]["Options"][option]
                     self.SList[command]["Table"].add_row(option, option_data["Value"], option_data["Required"], option_data["Description"])
+        

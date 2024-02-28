@@ -14,6 +14,7 @@ class MTLS_Server:
         server_thread = Thread(target=self._run_server, args=(context, host, port), daemon=True)
         server_thread.start()
         print(f"mTLS server started on {host}:{port}")
+        return server_thread
 
     def _setup_ssl_context(self):
         """Set up SSL context for mTLS."""
