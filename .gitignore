@@ -3,6 +3,7 @@
 env/
 venv/
 ENV/
+certs/
 env.bak/
 venv.bak/
 pop/
