@@ -11,8 +11,7 @@ class ServerCommands:
     SettingsTable = OptionsTable("Settings", ["Setting", "Value", "Required", "Description"])
     CrackTable = OptionsTable("Password Cracking", ["Setting", "Value", "Required", "Description"])
     MTLSTable = OptionsTable("MTLS", ["Setting", "Value", "Required", "Description"])
-
-
+    
     
     ServList = {
         "show": {
@@ -38,17 +37,20 @@ class ServerCommands:
                 "Username": {
                     "Value": "",
                     "Required": "Yes",
-                    "Description": "Username"
+                    "Description": "Username",
+                    "Location": 0
                 },
                 "Server_IP": {
-                    "Value": "",
+                    "Value": "localhost",
                     "Required": "Yes",
-                    "Description": "Username"
+                    "Description": "Username",
+                    "Location": 1
                 },
                 "Server_Port": {
-                    "Value": "",
+                    "Value": "9091",
                     "Required": "Yes",
-                    "Description": "Username"
+                    "Description": "Username",
+                    "Location": 2
                 }
             },
             "Table": SettingsTable
@@ -59,17 +61,20 @@ class ServerCommands:
                 "Hash_Location": {
                     "Value" : "",
                     "Required": "Yes",
-                    "Description": "Path of the hashes for cracking"
+                    "Description": "Path of the hashes for cracking",
+                    "Location": 0
                 },
                 "Wordlist": {
                     "Value" : "",
                     "Required": "Yes",
-                    "Description": "Path of the Wordlist typically found in /etc/wordlists"
+                    "Description": "Path of the Wordlist typically found in /etc/wordlists",
+                    "Location": 1
                 },
                 "Hash_Type":{
                     "Value" : "",
                     "Required": "Yes",
-                    "Description": "Number for the hash type in relation to number described in hashcat"
+                    "Description": "Number for the hash type in relation to number described in hashcat",
+                    "Location": 2
                 }
             },
             "Table": CrackTable
@@ -81,27 +86,32 @@ class ServerCommands:
                 "CA_CERT": {
                     "Value" : "",
                     "Required": "Yes",
-                    "Description": "Path to the CA Certificate"
+                    "Description": "Path to the CA Certificate",
+                    "Location": 0
                 },
                 "SERVER_CERT": {
                     "Value" : "",
                     "Required": "Yes",
-                    "Description": "Path to the Server Certificate"
+                    "Description": "Path to the Server Certificate",
+                    "Location": 1
                 },
                 "SERVER_KEY": {
                     "Value" : "",
                     "Required": "Yes",
-                    "Description": "Path to the Server Key"
+                    "Description": "Path to the Server Key",
+                    "Location": 2
                 },
                 "IP": {
-                    "Value" : "",
+                    "Value" : "192.168.1.165",
                     "Required": "Yes",
-                    "Description": "IP Address for the server"
+                    "Description": "IP Address for the server",
+                    "Location": 3
                 },
                 "Port": {
-                    "Value" : "",
+                    "Value" : "9091",
                     "Required": "Yes",
-                    "Description": "Port for the server"
+                    "Description": "Port for the server",
+                    "Location": 4
                 }
             },
             "Table": MTLSTable,
@@ -109,19 +119,19 @@ class ServerCommands:
             
         }
     }
+    if SList["settings"]["Options"]["Username"]["Value"] == "":
+            try:
+                SList["settings"]["Options"]["Username"]["Value"] = os.getlogin()
+            except:
+                SList["settings"]["Options"]["Username"]["Value"] = ""
+    if SList["settings"]["Options"]["Server_IP"]["Value"] == "":
+       SList["settings"]["Options"]["Server_IP"]["Value"] = "localhost"
+
     def update_mtls_ip_port(self, ip, port):
         self.SList["MTLS"]["Options"]["IP"]["Value"] = ip
         self.SList["MTLS"]["Options"]["Port"]["Value"] = port
 
     def __init__(self):
-        if ServerCommands.SList["settings"]["Options"]["Username"]["Value"] == "":
-            try:
-                ServerCommands.SList["settings"]["Options"]["Username"]["Value"] = os.getlogin()
-            except:
-                ServerCommands.SList["settings"]["Options"]["Username"]["Value"] = ""
-        if ServerCommands.SList["settings"]["Options"]["Server_IP"]["Value"] == "":
-            ServerCommands.SList["settings"]["Options"]["Server_IP"]["Value"] = "localhost"
-
         for command in self.ServList:
             ServerCommands.HelperTable.add_row(command, ServerCommands.ServList[command]["Description"])
         for command in self.SList:

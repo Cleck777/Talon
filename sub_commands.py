@@ -5,7 +5,7 @@ class SubCommands:
         'MTLS' : {
             "start" : {
                 "Description" : "Start the mTLS server",
-                "Location" : lambda: MTLS_Controller.run()
+                "Location" : lambda: MTLS_Controller.start()
             },
             "generate" : {
                 "Description" : "Generate mTLS certificates",

@@ -5,22 +5,35 @@ from server_commands import ServerCommands
 from termcolor import colored
 import subprocess
 import os
+
 class MTLS_Controller:
     success = colored('[+] ', 'green')
     fail = colored('[-] ', 'red')
-    server_commands = ServerCommands()
+    server_commands = ServerCommands
+    mtls_options = server_commands.SList["MTLS"]["Options"]
+    mtls_server = MTLS_Server(mtls_options["CA_CERT"]["Value"], mtls_options["SERVER_CERT"]["Value"], mtls_options["SERVER_KEY"]["Value"])
+
     @staticmethod
     def start_mtls_server():
         """Starts the mTLS server with the given host and port."""
         try:
-            mtls_options = MTLS_Controller.server_commands.SList["MTLS"]["Options"]
-            mtls_server = MTLS_Server(mtls_options["CA_CERT"]["Value"], mtls_options["SERVER_CERT"]["Value"], mtls_options["SERVER_KEY"]["Value"])
-            mtls_server.start_server(mtls_options["IP"]["Value"], mtls_options["Port"]["Value"])
+            MTLS_Controller.mtls_server.start_server(MTLS_Controller.mtls_options["IP"]["Value"], int(MTLS_Controller.mtls_options["Port"]["Value"]))
         except ValueError:
             print("Invalid port number.")
+    @staticmethod
+    def show_connections():
+        """Display the current connections to the mTLS server."""
+        print("Connections:")
+        for i, connection in enumerate(MTLS_Controller.mtls_server.connection_pool):
+            print(f"  {i + 1}. {connection.getpeername()}")
     
     @staticmethod
-    def generate_mtls_certificates(folder_name="mtls_certificates"):
+    def generate_mtls_certificates(folder_name="certs"):
+
+        cert_builder = CertBuilder()
+        cert_builder.setup_mtls()
+
+        """
        
         # Create the directory for storing certificates and keys
         os.makedirs(folder_name, exist_ok=True)
@@ -59,13 +72,13 @@ class MTLS_Controller:
         MTLS_Controller.server_commands.SList["MTLS"]["Options"]["CA_CERT"]["Value"] = folder_name + "/ca.crt"
         MTLS_Controller.server_commands.SList["MTLS"]["Options"]["SERVER_CERT"]["Value"] = folder_name + "/server.crt"
         MTLS_Controller.server_commands.SList["MTLS"]["Options"]["SERVER_KEY"]["Value"] = folder_name + "/server.key"
-
+        """
         
-        @staticmethod
-        def run():
+    @staticmethod
+    def start():
             print("Starting mTLS Server on " + MTLS_Controller.server_commands.SList["MTLS"]["Options"]["IP"]["Value"] + ":" + MTLS_Controller.server_commands.SList["MTLS"]["Options"]["Port"]["Value"] + "...")
             MTLS_Controller.start_mtls_server()
-        @staticmethod
-        def test():
-            return print("Testing mTLS Server...")
+    @staticmethod
+    def test():
+        return print("Testing mTLS Server...")
         
