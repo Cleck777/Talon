@@ -1,4 +1,4 @@
-module github.com/Cleck777/Talon/Talon_Implant
+/module github.com/Cleck777/Talon/Talon_Implant
 
 go 1.22.1
 
@@ -9,6 +9,9 @@ require (
 	golang.org/x/sys v0.18.0
 )
 
-require golang.org/x/text v0.14.0 // indirect
+require (
+	golang.org/x/text v0.14.0 // indirect
+)
 
 replace github.com/Cleck777/Talon/Talon_Implant/spoof => C:/Users/ctxbo/Desktop/Talon/Talon_Implant/spoof
+replace github.com/Cleck777/Talon/Talon_Implant/clients/HTTPClient => C:Users/ctxbo/Desktop/Talon/Talon_Implant/clients/HTTPClient.go
