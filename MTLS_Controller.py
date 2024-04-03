@@ -23,12 +23,12 @@ class MTLS_Controller:
     @staticmethod
     def show_connections():
         """Display the current connections to the mTLS server."""
-        print("Connections:")
+        print("MTLS Connections:")
         for i, connection in enumerate(MTLS_Controller.mtls_server.connection_pool):
             print(f"  {i + 1}. {connection.getpeername()}")
     
     @staticmethod
-    def generate_mtls_certificates(folder_name="certs"):
+    def generate_mtls_certificates(folder_name="MTLS_certs"):
 
         cert_builder = CertBuilder()
         cert_builder.setup_mtls()

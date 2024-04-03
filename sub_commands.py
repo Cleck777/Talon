@@ -1,4 +1,5 @@
 from MTLS_Controller import MTLS_Controller
+from HTTPS_Controller import HTTPS_Controller
 
 class SubCommands:
     subcmds = {
@@ -10,6 +11,19 @@ class SubCommands:
             "generate" : {
                 "Description" : "Generate mTLS certificates",
                 "Location" : lambda: MTLS_Controller.generate_mtls_certificates()
+            },
+        },
+
+        'HTTPS' : {
+            "start" : {
+                "Description" : "Start the HTTPS server",
+                "Location" : lambda: HTTPS_Controller.start()
+            },
+            "generate" : {
+                "Description" : "Generate HTTPS certificates",
+                "Location" : lambda: HTTPS_Controller.generate_https_certificates()
             }
+
         }
-    }
+    
+}

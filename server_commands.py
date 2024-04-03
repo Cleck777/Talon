@@ -11,11 +11,18 @@ class ServerCommands:
     SettingsTable = OptionsTable("Settings", ["Setting", "Value", "Required", "Description"])
     CrackTable = OptionsTable("Password Cracking", ["Setting", "Value", "Required", "Description"])
     MTLSTable = OptionsTable("MTLS", ["Setting", "Value", "Required", "Description"])
+    HTTPSTable = OptionsTable("HTTPS", ["Setting", "Value", "Required", "Description"])
     
     
     ServList = {
         "show": {
             "Description": "Show information",
+            "Options": {
+                "Options": ""
+            }
+        },
+        "use": {
+            "Description": "Use a command",
             "Options": {
                 "Options": ""
             }
@@ -117,7 +124,37 @@ class ServerCommands:
             "Table": MTLSTable,
             
             
-        }
+        },
+        "HTTPS": {
+            "Description": "Start the HTTPS server with the given host and port",
+            "Options": {
+                "SERVER_CERT": {
+                    "Value" : "https/server.crt",
+                    "Required": "Yes",
+                    "Description": "Path to the Server Certificate",
+                    "Location": 0
+                },
+                "SERVER_KEY": {
+                    "Value" : "https/server.key",
+                    "Required": "Yes",
+                    "Description": "Path to the Server Key",
+                    "Location": 1
+                },
+                "IP": {
+                    "Value" : "192.168.112.145",
+                    "Required": "Yes",
+                    "Description": "IP Address for the server",
+                    "Location": 2
+                },
+                "Port": {
+                    "Value" : "9091",
+                    "Required": "Yes",
+                    "Description": "Port for the server",
+                    "Location": 3
+                }
+            },
+            "Table": HTTPSTable
+    }
     }
     if SList["settings"]["Options"]["Username"]["Value"] == "":
             try:

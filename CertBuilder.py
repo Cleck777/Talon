@@ -1,6 +1,8 @@
 import subprocess
 import os
 import base64
+import server_commands as sc
+
 class CertBuilder:
     def run_command(self, command):
         result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -51,3 +53,11 @@ class CertBuilder:
             file.write(f"Client Certificate:\n{encoded_client_cert}\n\n")
 
         print("Certificates and keys encoded in base64 and saved to 'certs_base64.txt'.")
+
+    def setup_https(self):
+        print("Setting up HTTPS...")
+        self.run_command("openssl genrsa -out https/server.key 2048")
+        self.run_command("openssl req -new -key https/server.key -out https/server.csr -subj '/CN=TalonServer'")
+        self.run_command("openssl x509 -req -in https/server.csr -signkey https/server.key -out https/server.crt -days 365")
+        print("HTTPS setup completed.")
+
