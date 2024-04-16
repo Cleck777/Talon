@@ -1,5 +1,7 @@
 from MTLS_Controller import MTLS_Controller
 from HTTPS_Controller import HTTPS_Controller
+import ImplantCompiler
+import 
 
 class SubCommands:
     subcmds = {
@@ -24,6 +26,13 @@ class SubCommands:
                 "Location" : lambda: HTTPS_Controller.generate_https_certificates()
             }
 
+        },
+
+        'Implant' : {
+            "generate" : {
+                "Description" : "Compile the implant",
+                "Location" : lambda: ImplantCompiler.compile_implant()
+            }
         }
     
 }

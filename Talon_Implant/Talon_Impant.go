@@ -6,7 +6,10 @@ import (
 
 	//"github.com/gofrs/uuid"
 
-	"github.com/Cleck777/Talon/Talon_Implant/clients"
+   "github.com/Cleck777/Talon_C2/Talon_Implant/clients"
+
+	
+
 )
 
 func main() {

@@ -1,9 +1,0 @@
-.env
-.venv
-env/
-venv/
-ENV/
-certs/
-env.bak/
-venv.bak/
-pop/
