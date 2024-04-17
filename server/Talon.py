@@ -38,6 +38,9 @@ class Talon:
     
     def input_handler(self, user_input: str) -> None:
         parts = user_input.split(maxsplit=1)
+        if len(parts) == 0:
+            
+            return
         command = parts[0]
         args = parts[1] if len(parts) > 1 else ""
 

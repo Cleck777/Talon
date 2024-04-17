@@ -1,5 +1,6 @@
 import socket
 import ssl
+import os
 import subprocess
 from threading import Thread, Lock
 import logging
@@ -55,8 +56,12 @@ class HTTPS_Server:
             logging.error("Server error: " + str(e))
         logging.info(f"HTTPS server started on {host}:{port}")
 
+   
     def _setup_ssl_context(self):
         """Set up SSL context for HTTPS."""
+        if not os.path.isfile(self.server_cert) or not os.path.isfile(self.server_key):
+            raise FileNotFoundError("Server certificate or key file not found.")
+        
         context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
         context.load_cert_chain(certfile=self.server_cert, keyfile=self.server_key)
         context.verify_mode = ssl.CERT_NONE
@@ -80,27 +85,7 @@ class HTTPS_Server:
                     except Exception as e:
                         logging.error(f"Server error: {e}")
 
-    '''def _run_server(self, context, host, port):
-        """Run the HTTPS server to handle client connections."""
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            try:
-                sock.bind((host, port))
-                sock.listen(5)
-                with context.wrap_socket(sock, server_side=True) as ssock:
-                    logging.info(f"HTTPS server listening on {host}:{port}")
-                    while True:
-                        try:
-                            connection, address = ssock.accept()
-                            connected_msg = colored(f'Secure connection from {address}', 'green')
-                            logging.info(connected_msg)
-                            self.connection_pool.append(connection)
-                            # Spawn a new thread to handle the connection
-                            thread = Thread(target=self._handle_connection, args=(connection, address))
-                            thread.start()
-                        except Exception as e:
-                            logging.error(f"Server error: {e}")
-            except Exception as e:
-                logging.error(f"Socket error: {e}")'''
+    
 
     def generate_https_certificates(self, folder_name="MTLS_certs"):
         """
@@ -161,6 +146,7 @@ class HTTPS_Server:
             return
 
         connection = conn_details['connection']
+        connection.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 1)
         address = conn_details['address']
         logging.info(f"Handling connection {conn_id} from {address}")
 
@@ -185,41 +171,6 @@ class HTTPS_Server:
             self.connection_manager.remove_connection(conn_id)
             logging.info(f"Closed connection {conn_id} from {address}")
 
-    '''  def _handle_connection(self, connection, address):
-            """
-            Handles a client connection.
-
-            Args:
-                connection (socket): The client connection socket.
-                address (tuple): The client address.
-
-            Returns:
-                None
-            """
-            with self.lock:
-                connection_id = len(self.connection_pool)
-                self.connection_pool.append({'id': connection_id, 'connection': connection, 'address': address, 'active': True})
-                print(f"[+] New connection #{connection_id} from {address}")
-            
-            try:
-                while True:
-                    ready_to_read, _, _ = select.select([connection], [], [], 5)
-                    if ready_to_read:
-                        data = connection.recv(1024)
-                        if not data:
-                            # Connection closed by the client
-                            break
-                        print(f"[#{connection_id}] Received data: {data.decode('utf-8')}")
-                        # Here, handle commands/data as needed, similar to your existing logic
-                    else:
-                        # No data received, connection is idle
-                        continue
-            except Exception as e:
-                logging.error(f"Error in connection #{connection_id}: {e}")
-            finally:
-                with self.lock:
-                    self.connection_pool[connection_id]['active'] = False
-                print(f"[-] Connection #{connection_id} closed")'''
 
     def handle_getcmd(self, client_socket, method):
         """
@@ -233,10 +184,32 @@ class HTTPS_Server:
             None
         """
         if method == 'GET':
-            # Simulate waiting for command input from the user
-            command = input("[+] CMD > ")
-            response = f"HTTP/1.1 200 OK\r\nContent-Length: {len(command)}\r\n\r\n{command}"
-            client_socket.sendall(response.encode('utf-8'))
+            try:
+                # Simulate waiting for command input from the user
+                command = input("[+] CMD > ")
+                # Validate the command
+                if not self._validate_command(command):
+                    logging.error("Invalid command")
+                    return
+                response = f"HTTP/1.1 200 OK\r\nContent-Length: {len(command)}\r\n\r\n{command}"
+                client_socket.sendall(response.encode('utf-8'))
+            except BrokenPipeError:
+                logging.error("Client closed the connection")
+            except Exception as e:
+                logging.error(f"Failed to handle GET command: {e}")
+
+    def _validate_command(self, command):
+        """
+        Validates a command.
+
+        Args:
+            command (str): The command to validate.
+
+        Returns:
+            bool: True if the command is valid, False otherwise.
+        """
+        # Add your validation logic here
+        return True
 
     def handle_cmdoutput(self, client_socket, method, request):
         """

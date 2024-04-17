@@ -4,7 +4,6 @@ from termcolor import colored
 import os
 import subprocess
 import socketserver
-import signal
 import http.server
 
 
@@ -34,7 +33,7 @@ def compile_implant(sourcePath, OperatingSystem, BinaryPath):
         print(f"{fail} Error compiling implant: {e.stderr.decode('utf-8')}")
         return   # Decode from bytes to string for readability
 def serve_implant():
-    PORT = 80  # Specify the port number you want to use
+    PORT = 31337  # Specify the port number you want to use
     Handler = http.server.SimpleHTTPRequestHandler
     try:
         os.chdir('../Talon_Implant/Talon_Implant')  # Move into the ../Talon_Implant/Talon_Implant directory
@@ -45,8 +44,11 @@ def serve_implant():
             except KeyboardInterrupt:
                 print("Server stopped by user")
                 httpd.shutdown()
+    except PermissionError as e:
+        print(fail + "Error starting server: "+ e.strerror)
+        return  
     except OSError as e:
-        print(fail + "Error starting server: "+ e.strerror.decode('utf-8'))
+        print(fail + "Error starting server: "+ str(e))
         return  
 
     
