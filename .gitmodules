@@ -1,0 +1,3 @@
+[submodule "revsocks"]
+	path = revsocks
+	url = https://github.com/kost/revsocks

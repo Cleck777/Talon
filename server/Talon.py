@@ -77,10 +77,11 @@ class Talon:
             self.current_command = "MTLS"
         elif command == "HTTPS":
             self.current_command = "HTTPS"
+        elif command == "Proxy":
+            self.current_command = "Proxy"
         elif command == "back":
             self.current_command = None
         elif command == "show":
-            print(args)
             if not args:
                 print(self.fail + "Please state what you would like to show")
                 return
@@ -88,8 +89,8 @@ class Talon:
                 self.show_options()
             if args == "connections":
                 self.show_connections()
-            else: 
-                print(self.fail + "No command selected")
+           # else: 
+                #print(self.fail + "No command selected")
         elif command == "set":
             if not args:
                 print(self.fail + "Please state what you would like to set")

@@ -11,7 +11,7 @@ class ServerCommands:
     MTLSTable = OptionsTable("MTLS", ["Setting", "Value", "Required", "Description"])
     HTTPSTable = OptionsTable("HTTPS", ["Setting", "Value", "Required", "Description"])
     CompileTable = OptionsTable("Compile", ["Setting", "Value", "Required", "Description"])
-    
+    ProxyTable = OptionsTable("Proxy", ["Setting", "Value", "Required", "Description"])
     ServList = {
         "show": {
             "Description": "Show information",
@@ -153,6 +153,49 @@ class ServerCommands:
                 }
             },
             "Table": HTTPSTable
+        },
+        "Proxy": {
+            "Description": "Start the Proxy server with the given host and port",
+            "Options": {
+                "IP": {
+                    "Value" : "",
+                    "Required" : "Yes",
+                    "Description": "IP Address for the server",
+                    "Location": 0
+                },
+                "Port": {
+                    "Value" : "1080",
+                    "Required": "Yes",
+                    "Description": "Port for the server",
+                    "Location": 1
+                },
+                "Password": {
+                    "Value" : "Password123",
+                    "Required": "Yes",
+                    "Description": "Password for the server",
+                    "Location": 2
+                },
+                "TLS": {
+                    "Value" : "True",
+                    "Required": "Yes",
+                    "Description": "Enable TLS",
+                    "Location": 3
+                },
+                "Socks_Address": {
+                    "Value" : "localhost:8443",
+                    "Required": "Yes",
+                    "Description": "Address for the socks server",
+                    "Location": 4
+                },
+                "Type": {
+                    "Value"  :  "websocket",
+                    "Required": "Yes",
+                    "Description": "Type of Proxy (TCP or websocket)",
+                    "Location": 4
+
+                },
+            },
+            "Table": ProxyTable
         },
 
         "Implant": {

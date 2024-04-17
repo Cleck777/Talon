@@ -2,6 +2,7 @@ from MTLS_Controller import MTLS_Controller
 from HTTPS_Controller import HTTPS_Controller
 from server_commands import ServerCommands 
 import ImplantCompiler
+import proxy_controller
 
 class SubCommands:
     subcmds = {
@@ -36,8 +37,15 @@ class SubCommands:
             "serve" : {
                 "Description" : "Serve the implant",
                 "Location" : lambda: ImplantCompiler.serve_implant()
+            },
+        },
+        'Proxy' : {
+            "start" : {
+                "Description" : "Start the Proxy server with the given host and port",
+                "Location" : lambda: proxy_controller.StartProxy()
             }
 
         }
     
-}
+    }
+
